@@ -174,6 +174,8 @@
         .draggable-text { position: absolute; border: 2px dashed rgba(16, 185, 129, 0.8); background: rgba(16, 185, 129, 0.05); cursor: move; touch-action: none; user-select: none; z-index: 100; min-width: 40px; min-height: 24px; display: flex; align-items: center; justify-content: flex-start; padding: 2px; box-sizing: border-box; }
         .draggable-text span { display: block; white-space: pre-wrap; word-wrap: break-word; line-height: 1.1; pointer-events: none; width: 100%; }
         .text-resizer { position: absolute; bottom: -6px; right: -6px; width: 16px; height: 16px; background: var(--success); border-radius: 50%; border: 2px solid white; cursor: nwse-resize; z-index: 101; }
+        .text-rotator { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); width: 16px; height: 16px; background: var(--warning); border-radius: 50%; border: 2px solid white; cursor: grab; z-index: 101; }
+        .text-rotator::after { content: ''; position: absolute; top: 14px; left: 6px; width: 2px; height: 10px; background: var(--warning); }
         .text-deleter { position: absolute; top: -10px; right: -10px; width: 22px; height: 22px; background: var(--danger); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 10px; font-weight: bold; z-index: 101; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
 
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -1097,7 +1099,7 @@
             
             if (addtextWorkspace.data[pageNum]) {
                 addtextWorkspace.data[pageNum].forEach(tData => {
-                    createAddTextElement(tData.text, tData.font, tData.color, tData.x, tData.y, tData.w, tData.h, tData.id);
+                    createAddTextElement(tData.text, tData.font, tData.color, tData.x, tData.y, tData.w, tData.h, tData.rot || 0, tData.id);
                 });
             }
         }
@@ -1120,11 +1122,12 @@
                 const text = tEl.getAttribute('data-text');
                 const font = tEl.getAttribute('data-font');
                 const color = tEl.getAttribute('data-color');
+                const rot = parseFloat(tEl.getAttribute('data-rotation')) || 0;
                 const x = tEl.offsetLeft / wrapperRect.width;
                 const y = tEl.offsetTop / wrapperRect.height;
                 const w = tEl.offsetWidth / wrapperRect.width;
                 const h = tEl.offsetHeight / wrapperRect.height;
-                pageData.push({ id: tEl.id, text, font, color, x, y, w, h });
+                pageData.push({ id: tEl.id, text, font, color, x, y, w, h, rot });
             });
             
             addtextWorkspace.data[addtextWorkspace.currentPage] = pageData;
@@ -1137,11 +1140,11 @@
             const fontVal = document.getElementById('font-addtext-val').value;
             const colorVal = document.getElementById('color-addtext-val').value;
 
-            createAddTextElement(textVal, fontVal, colorVal, 0.2, 0.4, 0.5, 0.1, 'txt_' + Date.now());
+            createAddTextElement(textVal, fontVal, colorVal, 0.2, 0.4, 0.5, 0.1, 0, 'txt_' + Date.now());
             toast("เพิ่มข้อความลงในหน้าปัจจุบันแล้ว สามารถลากหรือปรับขนาดได้");
         }
 
-        function createAddTextElement(text, font, color, relX, relY, relW, relH, id) {
+        function createAddTextElement(text, font, color, relX, relY, relW, relH, rot, id) {
             const wrapper = document.getElementById('addtext-pdf-wrapper');
             const wrapperRect = wrapper.getBoundingClientRect();
             
@@ -1151,11 +1154,13 @@
             txtDiv.setAttribute('data-text', text);
             txtDiv.setAttribute('data-font', font);
             txtDiv.setAttribute('data-color', color);
+            txtDiv.setAttribute('data-rotation', rot);
             
             txtDiv.style.left = (relX * wrapperRect.width) + 'px';
             txtDiv.style.top = (relY * wrapperRect.height) + 'px';
             txtDiv.style.width = (relW * wrapperRect.width) + 'px';
             txtDiv.style.height = (relH * wrapperRect.height) + 'px';
+            txtDiv.style.transform = `rotate(${rot}deg)`;
             txtDiv.style.color = color;
             txtDiv.style.fontFamily = font;
 
@@ -1165,6 +1170,9 @@
 
             const resizer = document.createElement('div');
             resizer.className = 'text-resizer';
+
+            const rotator = document.createElement('div');
+            rotator.className = 'text-rotator';
             
             const deleter = document.createElement('div');
             deleter.className = 'text-deleter';
@@ -1173,6 +1181,7 @@
 
             txtDiv.appendChild(span);
             txtDiv.appendChild(resizer);
+            txtDiv.appendChild(rotator);
             txtDiv.appendChild(deleter);
             wrapper.appendChild(txtDiv);
 
@@ -1183,6 +1192,9 @@
             let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
             let startW = 0, startH = 0, startX = 0, startY = 0;
             let isResizing = false;
+            let isRotating = false;
+            let startAngle = 0;
+            let currentRotation = parseFloat(elmnt.getAttribute('data-rotation')) || 0;
 
             elmnt.onpointerdown = dragMouseDown;
 
@@ -1192,12 +1204,23 @@
 
                 if (e.target.className.includes('text-resizer')) {
                     isResizing = true;
+                    isRotating = false;
                     startW = elmnt.offsetWidth;
                     startH = elmnt.offsetHeight;
                     startX = e.clientX || e.touches[0].clientX;
                     startY = e.clientY || e.touches[0].clientY;
+                } else if (e.target.className.includes('text-rotator')) {
+                    isRotating = true;
+                    isResizing = false;
+                    const rect = elmnt.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top + rect.height / 2;
+                    const clientX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
+                    const clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
+                    startAngle = Math.atan2(clientY - centerY, clientX - centerX) * (180 / Math.PI) - currentRotation;
                 } else {
                     isResizing = false;
+                    isRotating = false;
                     pos3 = e.clientX || e.touches[0].clientX;
                     pos4 = e.clientY || e.touches[0].clientY;
                 }
@@ -1225,6 +1248,14 @@
                         elmnt.style.height = newH + "px";
                         spanEl.style.fontSize = (newH * 0.7) + 'px'; // Scale font size relative to box height
                     }
+                } else if (isRotating) {
+                    const wrapperRect = wrapper.getBoundingClientRect();
+                    const centerX = wrapperRect.left + elmnt.offsetLeft + elmnt.offsetWidth / 2;
+                    const centerY = wrapperRect.top + elmnt.offsetTop + elmnt.offsetHeight / 2;
+                    const angle = Math.atan2(clientY - centerY, clientX - centerX) * (180 / Math.PI);
+                    currentRotation = angle - startAngle;
+                    elmnt.style.transform = `rotate(${currentRotation}deg)`;
+                    elmnt.setAttribute('data-rotation', currentRotation);
                 } else {
                     pos1 = pos3 - clientX;
                     pos2 = pos4 - clientY;
@@ -1305,19 +1336,32 @@
                         const finalW = txtObj.w * width;
                         const finalH = txtObj.h * height;
                         const finalX = txtObj.x * width;
+                        const finalYTop = txtObj.y * height;
                         
                         const fontSizeOnPdf = finalH * 0.7; // Base size on box height like in preview
                         
-                        // Y coordinate calculation (PDF is 0 at bottom)
-                        // Add some padding adjustment so it aligns well
-                        const finalY = height - (txtObj.y * height) - finalH + (finalH * 0.2); 
+                        // หาจุดกึ่งกลางของกล่องข้อความ
+                        const cx = finalX + finalW / 2;
+                        const cy = height - finalYTop - finalH / 2;
+
+                        const rot = txtObj.rot || 0;
+                        const rotRad = -rot * (Math.PI / 180); // แปลงมุมให้เข้ากับสมการทางคณิตศาสตร์ (ทวนเข็ม)
+
+                        // ตำแหน่งอ้างอิงของจุดเริ่มต้นการวาดข้อความ (แกนล่างซ้ายของกล่องข้อความ)
+                        const offsetX = -finalW / 2;
+                        const offsetY = -finalH / 2 + (finalH * 0.2); 
+
+                        // คำนวณพิกัดแกน X, Y ใหม่เมื่อมีการหมุนรอบจุดกึ่งกลาง (cx, cy)
+                        const drawX = cx + (offsetX * Math.cos(rotRad) - offsetY * Math.sin(rotRad));
+                        const drawY = cy + (offsetX * Math.sin(rotRad) + offsetY * Math.cos(rotRad));
 
                         page.drawText(txtObj.text, {
-                            x: finalX,
-                            y: finalY,
+                            x: drawX,
+                            y: drawY,
                             size: fontSizeOnPdf,
                             font: customFont,
                             color: rgb(rgbColor.r, rgbColor.g, rgbColor.b),
+                            rotate: degrees(-rot), // ใส่ค่าองศาการหมุนกลับทิศให้ PDF-Lib เข้าใจตรงกับ HTML
                             lineHeight: fontSizeOnPdf * 1.2
                         });
                     }

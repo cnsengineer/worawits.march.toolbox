@@ -7,7 +7,7 @@
     
     <meta name="theme-color" content="#0046be">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="icon" type="image/png" href="Logo.png">
+    <link rel="icon" type="image/png" href="Logo1.png">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -293,7 +293,7 @@
                 <div class="grid-2" style="margin-top:1.5rem; background: var(--drop-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border);">
                     <div class="form-group" style="grid-column: 1 / -1;">
                         <label data-i18n="lbl_input_text">ข้อความ</label>
-                        <textarea id="text-addtext-val" rows="2" style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: 'Sarabun';" placeholder="พิมพ์ข้อความที่ต้องการ..."></textarea>
+                        <textarea id="text-addtext-val" rows="2" style="width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-family: 'Sarabun';" data-i18n-placeholder="ph_input_text" placeholder="พิมพ์ข้อความที่ต้องการ..."></textarea>
                     </div>
                     <div class="form-group">
                         <label data-i18n="lbl_font">แบบอักษร</label>
@@ -310,7 +310,7 @@
                         <input type="color" id="color-addtext-val" value="#000000" style="height: 45px; padding: 2px; cursor: pointer;">
                     </div>
                     <div class="form-group" style="grid-column: 1 / -1; display: flex; justify-content: flex-end;">
-                        <button type="button" class="btn-sm" style="background:var(--success); color:white; border:none; padding: 10px 20px; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;" onclick="addTextToPreview()" data-i18n="btn_add_to_page"><i class="fas fa-plus"></i> เพิ่มลงหน้านี้</button>
+                        <button type="button" class="btn-sm" style="background:var(--success); color:white; border:none; padding: 10px 20px; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;" onclick="addTextToPreview()"><i class="fas fa-plus"></i> <span data-i18n="btn_add_to_page">เพิ่มลงหน้านี้</span></button>
                     </div>
                 </div>
 
@@ -355,7 +355,7 @@
                             </div>
                             <div style="display:flex; gap:10px;">
                                 <button type="button" class="btn-sm" onclick="clearSig()" data-i18n="btn_clear_sig">Clear</button>
-                                <button type="button" class="btn-sm" style="background:var(--accent); color:white; border:none;" onclick="addSignatureToPreview()" data-i18n="btn_add_to_page"><i class="fas fa-plus"></i> เพิ่มลงหน้านี้</button>
+                                <button type="button" class="btn-sm" style="background:var(--accent); color:white; border:none;" onclick="addSignatureToPreview()"><i class="fas fa-plus"></i> <span data-i18n="btn_add_to_page">เพิ่มลงหน้านี้</span></button>
                             </div>
                         </div>
                     </div>
@@ -487,7 +487,7 @@
                             <option value="rgba(128, 128, 128, 1)" data-i18n="color_gray">Gray</option>
                             <option value="rgba(255, 0, 0, 1)" data-i18n="color_red">Red</option>
                             <option value="rgba(0, 0, 255, 1)" data-i18n="color_blue">Blue</option>
-                            <option value="rgba(0, 0, 0, 1)">Black</option>
+                            <option value="rgba(0, 0, 0, 1)" data-i18n="color_black">Black</option>
                         </select>
                     </div>
 
@@ -585,7 +585,7 @@
         </div>
     </main>
 
-    <div class="overlay" id="loading-overlay"><div class="spinner-container"><div class="spinner"></div><h3 id="loading-text" style="margin:0 0 10px 0;">Processing...</h3><div class="progress-track"><div class="progress-fill" id="progress-bar"></div></div><span class="progress-text" id="progress-percent">0%</span></div></div>
+    <div class="overlay" id="loading-overlay"><div class="spinner-container"><div class="spinner"></div><h3 id="loading-text" style="margin:0 0 10px 0;" data-i18n="msg_processing">Processing...</h3><div class="progress-track"><div class="progress-fill" id="progress-bar"></div></div><span class="progress-text" id="progress-percent">0%</span></div></div>
     <div class="qv-modal" id="quick-view-modal" onclick="closeQuickView()"><div class="qv-close" onclick="closeQuickView()"><i class="fas fa-times"></i></div><div class="qv-content" onclick="event.stopPropagation()"><img id="qv-img" src=""></div></div>
     <div id="toast-container"></div>
 
@@ -611,7 +611,17 @@
                 title_sign: "เซ็นเอกสาร", desc_sign: "วาดลายเซ็นและลากวางอิสระ", lbl_draw_sig: "วาดลายเซ็น", btn_clear_sig: "ล้าง", btn_sign: "บันทึก PDF ที่มีลายเซ็น", btn_add_to_page: "เพิ่มลงหน้านี้", lbl_page: "หน้า", btn_prev: "ก่อนหน้า", btn_next: "ถัดไป",
                 title_addtext: "เพิ่มข้อความ (Add Text)", desc_addtext: "พิมพ์ข้อความและวางลงบนเอกสารได้อย่างอิสระ", lbl_input_text: "พิมพ์ข้อความ", lbl_font: "รูปแบบฟอนต์", btn_save_pdf: "บันทึก PDF",
                 title_metadata: "แก้ไข Metadata", desc_metadata: "แก้ไขข้อมูล Title, Author, Keywords", lbl_meta_title: "ชื่อเอกสาร (Title)", lbl_meta_author: "ผู้แต่ง (Author)", lbl_meta_subject: "หัวข้อ (Subject)", lbl_meta_keywords: "คำค้นหา (Keywords)", btn_metadata: "บันทึกข้อมูล",
+                
                 msg_done: "เสร็จเรียบร้อย!", msg_err_pdf: "เลือกไฟล์ PDF ก่อน", msg_err_pass: "รหัสผ่านไม่ถูกต้อง", msg_add_files: "เพิ่มไฟล์แล้ว", msg_processing: "กำลังประมวลผล...",
+                msg_err_merge: "ต้องใช้ไฟล์ PDF อย่างน้อย 2 ไฟล์", msg_err_pass_req: "กรุณาใส่รหัสผ่าน", 
+                msg_no_text_added: "คุณยังไม่ได้เพิ่มข้อความลงบนหน้าเอกสาร (คลิก เพิ่มลงหน้านี้)", msg_text_added: "เพิ่มข้อความลงในหน้าปัจจุบันแล้ว สามารถลากหรือปรับขนาดได้", 
+                msg_err_empty_text: "กรุณาพิมพ์ข้อความที่ต้องการเพิ่ม", msg_err_no_sig: "กรุณาวาดลายเซ็นก่อน", 
+                msg_sig_added: "เพิ่มลายเซ็นลงในหน้าปัจจุบันแล้ว สามารถลากหรือปรับขนาดได้", msg_err_img: "กรุณาเลือกรูปภาพก่อน",
+                msg_proc_page: "กำลังประมวลผลหน้าที่ {1} จาก {2}...",
+                
+                loading_init: "กำลังเตรียมพร้อม...", loading_gen: "กำลังสร้าง PDF...", loading_merge: "กำลังรวมไฟล์...", loading_split: "กำลังแยกไฟล์...", 
+                loading_del: "กำลังลบหน้า...", loading_comp: "กำลังบีบอัด...", loading_font: "กำลังโหลดฟอนต์...", loading_apply_sig: "กำลังฝังลายเซ็น...", 
+                loading_apply_txt: "กำลังฝังข้อความ...", loading_apply_wm: "กำลังฝังลายน้ำ...", loading_rotate: "กำลังหมุนไฟล์...", loading_meta: "กำลังอัปเดต Metadata...",
                 
                 opt_std: "มาตรฐาน", opt_high: "สูง", opt_ultra: "สูงสุด", opt_smart: "Auto (ไฟล์เดียวโหลดเลย)", opt_zip: "รวมเป็น ZIP เสมอ",
                 opt_auto: "เท่าขนาดรูปจริง", opt_no_margin: "ไม่มีขอบ", opt_small: "ขอบเล็ก", opt_std_margin: "ขอบมาตรฐาน",
@@ -619,12 +629,13 @@
                 opt_range: "ดึงเฉพาะช่วงหน้า", opt_all: "แยกทุกหน้าเป็นไฟล์เดี่ยว",
                 opt_last_page: "หน้าสุดท้าย", opt_first_page: "หน้าแรก", opt_all_pages: "ทุกหน้า",
                 rot_90: "หมุนขวา 90°", rot_180: "หมุน 180°", rot_270: "หมุนซ้าย 90°",
-                color_gray: "เทา", color_red: "แดง", color_blue: "น้ำเงิน",
+                color_gray: "เทา", color_red: "แดง", color_blue: "น้ำเงิน", color_black: "ดำ",
                 pos_bc: "ล่างตรงกลาง", pos_br: "ล่างขวา", pos_bl: "ล่างซ้าย", pos_tc: "บนตรงกลาง", pos_tr: "บนขวา",
                 
                 ph_pages: "เช่น 1, 3-5", ph_filename_auto: "ตั้งชื่อไฟล์ (ถ้าว่าง = Auto)", ph_split: "เช่น 1-3, 5", ph_rotate: "ว่างไว้ = หมุนทุกหน้า",
                 ph_wm_text: "ข้อความลายน้ำ...", ph_delete: "เช่น 2, 4-5", 
                 ph_pass_u: "รหัสสำหรับเปิดไฟล์", ph_pass_o: "รหัสสำหรับแก้ไข (ไม่บังคับ)", ph_pass_unlock: "ใส่รหัสเพื่อปลดล็อก",
+                ph_input_text: "พิมพ์ข้อความที่ต้องการ...",
                 help_click_delete: "คลิกที่รูปเพื่อเลือกหน้าที่จะลบ (สีแดง)", help_drag: "ลากรูปเพื่อเรียงลำดับใหม่ได้", note_compress: "ไฟล์ประมวลผลบนเครื่องของคุณ 100%",
                 privacy_note: "ไฟล์ประมวลผลบนเครื่องของคุณ 100%",
                 ph_meta_title: "เช่น รายงานประจำปี", ph_meta_author: "เช่น สมชาย ใจดี", ph_meta_subject: "เช่น รายงานการประชุม", ph_meta_keywords: "เช่น การเงิน, บัญชี",
@@ -647,7 +658,17 @@
                 title_sign: "Sign PDF", desc_sign: "Draw and place signature freely", lbl_draw_sig: "Draw Signature", btn_clear_sig: "Clear", btn_sign: "Save Signed PDF", btn_add_to_page: "Add to page", lbl_page: "Page", btn_prev: "Prev", btn_next: "Next",
                 title_addtext: "Add Text", desc_addtext: "Add and place text boxes on PDF freely", lbl_input_text: "Input Text", lbl_font: "Font Family", btn_save_pdf: "Save PDF",
                 title_metadata: "Edit Metadata", desc_metadata: "Edit Title, Author, Keywords", lbl_meta_title: "Title", lbl_meta_author: "Author", lbl_meta_subject: "Subject", lbl_meta_keywords: "Keywords", btn_metadata: "Save Metadata",
+                
                 msg_done: "Done!", msg_err_pdf: "Select PDF first", msg_err_pass: "Incorrect password", msg_add_files: "Files added", msg_processing: "Processing...",
+                msg_err_merge: "Need 2+ PDF files", msg_err_pass_req: "Password is required", 
+                msg_no_text_added: "No text added to document. Click 'Add to page' first.", msg_text_added: "Text added to current page. You can drag and resize it.", 
+                msg_err_empty_text: "Please input text to add.", msg_err_no_sig: "Please draw a signature first.", 
+                msg_sig_added: "Signature added to current page. You can drag and resize it.", msg_err_img: "Please select images first",
+                msg_proc_page: "Processing Page {1} of {2}...",
+                
+                loading_init: "Initializing...", loading_gen: "Generating PDF...", loading_merge: "Merging...", loading_split: "Splitting...", 
+                loading_del: "Removing Pages...", loading_comp: "Compressing...", loading_font: "Downloading Fonts...", loading_apply_sig: "Applying Signatures...", 
+                loading_apply_txt: "Applying Text...", loading_apply_wm: "Applying Watermark...", loading_rotate: "Rotating...", loading_meta: "Updating Metadata...",
                 
                 opt_std: "Standard", opt_high: "High", opt_ultra: "Ultra", opt_smart: "Auto", opt_zip: "Always ZIP",
                 opt_auto: "Fit Image", opt_no_margin: "None", opt_small: "Small", opt_std_margin: "Standard",
@@ -655,12 +676,13 @@
                 opt_range: "Extract Range", opt_all: "Explode (All Pages)",
                 opt_last_page: "Last Page", opt_first_page: "First Page", opt_all_pages: "All Pages",
                 rot_90: "Rotate Right 90°", rot_180: "Rotate 180°", rot_270: "Rotate Left 90°",
-                color_gray: "Gray", color_red: "Red", color_blue: "Blue",
+                color_gray: "Gray", color_red: "Red", color_blue: "Blue", color_black: "Black",
                 pos_bc: "Bottom Center", pos_br: "Bottom Right", pos_bl: "Bottom Left", pos_tc: "Top Center", pos_tr: "Top Right",
                 
                 ph_pages: "e.g. 1, 3-5", ph_filename_auto: "Auto filename", ph_split: "e.g. 1-3, 5", ph_rotate: "Empty = All",
                 ph_wm_text: "Watermark text...", ph_delete: "e.g. 2, 4-5",
                 ph_pass_u: "Required to Open", ph_pass_o: "Required to Edit", ph_pass_unlock: "Enter password",
+                ph_input_text: "Enter text here...",
                 help_click_delete: "Click thumbnails to select (Red)", help_drag: "Drag to reorder", note_compress: "100% Local Processing: Your files never leave your browser.",
                 privacy_note: "100% Local Processing: Your files never leave your browser.",
                 ph_meta_title: "e.g. Annual Report", ph_meta_author: "e.g. John Doe", ph_meta_subject: "e.g. Meeting Minutes", ph_meta_keywords: "e.g. Finance, Accounting",
@@ -801,7 +823,7 @@
 
         async function initSignPreview(file) {
             try {
-                showLoading();
+                showLoading(t('loading_init'));
                 resetSignWorkspace();
                 signWorkspace.pdf = await pdfjsLib.getDocument(await file.arrayBuffer()).promise;
                 signWorkspace.totalPages = signWorkspace.pdf.numPages;
@@ -874,13 +896,13 @@
             blank.width = sigCanvas.width; 
             blank.height = sigCanvas.height;
             if (sigCanvas.toDataURL() === blank.toDataURL()) {
-                return toast("Please draw a signature first", 'error');
+                return toast(t('msg_err_no_sig'), 'error');
             }
 
             // Create signature in the middle of the preview
             // Crop the empty space around the signature for better UX (Optional, skipping for speed, using full drawn box)
             createSignatureElement(sigCanvas.toDataURL(), 0.3, 0.4, 0.4, 0.2, 'sig_' + Date.now());
-            toast("เพิ่มลายเซ็นลงในหน้าปัจจุบันแล้ว สามารถลากหรือปรับขนาดได้");
+            toast(t('msg_sig_added'));
         }
 
         function createSignatureElement(imgSrc, relX, relY, relW, relH, id) {
@@ -1002,10 +1024,10 @@
             }
 
             if (!hasSignatures) {
-                return toast("คุณยังไม่ได้เพิ่มลายเซ็นลงบนหน้าเอกสาร (คลิก เพิ่มลงหน้านี้)", 'warning');
+                return toast(t('msg_no_text_added'), 'warning');
             }
 
-            showLoading("Applying Signatures...");
+            showLoading(t('loading_apply_sig'));
             try {
                 const doc = await PDFDocument.load(await state.files.sign.arrayBuffer());
                 
@@ -1064,7 +1086,7 @@
 
         async function initAddTextPreview(file) {
             try {
-                showLoading();
+                showLoading(t('loading_init'));
                 resetAddTextWorkspace();
                 addtextWorkspace.pdf = await pdfjsLib.getDocument(await file.arrayBuffer()).promise;
                 addtextWorkspace.totalPages = addtextWorkspace.pdf.numPages;
@@ -1135,13 +1157,13 @@
 
         function addTextToPreview() {
             const textVal = document.getElementById('text-addtext-val').value.trim();
-            if (!textVal) return toast("กรุณาพิมพ์ข้อความที่ต้องการเพิ่ม", 'error');
+            if (!textVal) return toast(t('msg_err_empty_text'), 'error');
 
             const fontVal = document.getElementById('font-addtext-val').value;
             const colorVal = document.getElementById('color-addtext-val').value;
 
             createAddTextElement(textVal, fontVal, colorVal, 0.2, 0.4, 0.5, 0.1, 0, 'txt_' + Date.now());
-            toast("เพิ่มข้อความลงในหน้าปัจจุบันแล้ว สามารถลากหรือปรับขนาดได้");
+            toast(t('msg_text_added'));
         }
 
         function createAddTextElement(text, font, color, relX, relY, relW, relH, rot, id) {
@@ -1307,10 +1329,10 @@
             }
 
             if (!hasTexts) {
-                return toast("คุณยังไม่ได้เพิ่มข้อความลงบนหน้าเอกสาร (คลิก เพิ่มลงหน้านี้)", 'warning');
+                return toast(t('msg_no_text_added'), 'warning');
             }
 
-            showLoading("Applying Text...");
+            showLoading(t('loading_apply_txt'));
             try {
                 const doc = await PDFDocument.load(await state.files.addtext.arrayBuffer());
                 doc.registerFontkit(fontkit);
@@ -1379,7 +1401,7 @@
 
         async function processMetadata() {
             if(!state.files.metadata) return toast(t('msg_err_pdf'),'error');
-            showLoading("Updating Metadata...");
+            showLoading(t('loading_meta'));
             try {
                 const doc=await PDFDocument.load(await state.files.metadata.arrayBuffer());
                 const title=document.getElementById('meta-title').value;
@@ -1488,7 +1510,7 @@
 
         async function processWatermark(){ 
             if(!state.files.watermark) return toast(t('msg_err_pdf'),'error'); 
-            showLoading("Applying Watermark..."); 
+            showLoading(t('loading_apply_wm')); 
             try{ 
                 const doc = await PDFDocument.load(await state.files.watermark.arrayBuffer());
                 
@@ -1565,7 +1587,7 @@
         async function processRotate(){ 
             if(!state.files.rotate) return toast(t('msg_err_pdf'),'error'); 
             
-            showLoading("Rotating..."); 
+            showLoading(t('loading_rotate')); 
             try{ 
                 const doc = await PDFDocument.load(await state.files.rotate.arrayBuffer());
                 const ang = parseInt(document.getElementById('angle-rotate').value);
@@ -1597,7 +1619,7 @@
 
         async function processPdfToImg(){ 
             if(!state.files.pdf2img)return toast(t('msg_err_pdf'),'error'); 
-            showLoading("Initializing..."); 
+            showLoading(t('loading_init')); 
             try{ 
                 const f=state.files.pdf2img, fmt=document.getElementById('format-pdf2img').value, sc=parseFloat(document.getElementById('scale-pdf2img').value), pdf=await pdfjsLib.getDocument(await f.arrayBuffer()).promise; 
                 let pgs=parseRange(document.getElementById('range-pdf2img').value, pdf.numPages); 
@@ -1606,7 +1628,7 @@
                 
                 for(let i=0;i<pgs.length;i++){ 
                     const p=pgs[i];
-                    document.getElementById('loading-text').innerText = `Processing Page ${p} of ${pgs.length}...`;
+                    document.getElementById('loading-text').innerText = t('msg_proc_page').replace('{1}', p).replace('{2}', pgs.length);
                     updateProgress(((i+1)/pgs.length)*100); 
                     await new Promise(r => requestAnimationFrame(r));
                     
@@ -1622,7 +1644,7 @@
 
         async function processImgToPdf(){ 
             if(!state.lists.img2pdf.length)return toast(t('msg_err_img'),'error'); 
-            showLoading("Generating PDF..."); 
+            showLoading(t('loading_gen')); 
             try{ 
                 const doc=await PDFDocument.create(), sz=document.getElementById('size-img2pdf').value, mar=parseInt(document.getElementById('margin-img2pdf').value); 
                 for(let i=0;i<state.lists.img2pdf.length;i++){ 
@@ -1639,8 +1661,8 @@
         }
 
         async function processMerge(){ 
-            if(state.lists.merge.length<2)return toast("Need 2+ files",'error'); 
-            showLoading("Merging..."); 
+            if(state.lists.merge.length<2)return toast(t('msg_err_merge'),'error'); 
+            showLoading(t('loading_merge')); 
             try{ 
                 const doc=await PDFDocument.create(); 
                 for(let i=0; i<state.lists.merge.length; i++){
@@ -1657,7 +1679,7 @@
 
         async function processSplit(){ 
             if(!state.files.split)return toast(t('msg_err_pdf'),'error'); 
-            showLoading("Splitting..."); 
+            showLoading(t('loading_split')); 
             try{ 
                 const src=await PDFDocument.load(await state.files.split.arrayBuffer()), mode=document.getElementById('mode-split').value, zip=new JSZip(); 
                 if(mode==='all'){ 
@@ -1684,7 +1706,7 @@
 
         async function processDelete(){ 
             if(!state.files.delete)return toast(t('msg_err_pdf'),'error'); 
-            showLoading("Removing Pages..."); 
+            showLoading(t('loading_del')); 
             try{ 
                 const src=await PDFDocument.load(await state.files.delete.arrayBuffer()), del=parseRange(document.getElementById('val-delete').value,src.getPageCount()).map(p=>p-1), doc=await PDFDocument.create(); 
                 const kp=src.getPageIndices().filter(i=>!del.includes(i)); 
@@ -1696,11 +1718,11 @@
 
         async function processCompress(){ 
             if(!state.files.compress)return toast(t('msg_err_pdf'),'error'); 
-            showLoading("Compressing..."); 
+            showLoading(t('loading_comp')); 
             try{ 
                 const pdf=await pdfjsLib.getDocument(await state.files.compress.arrayBuffer()).promise, newDoc=await PDFDocument.create(), level=parseFloat(document.getElementById('level-compress').value); 
                 for(let i=1;i<=pdf.numPages;i++){ 
-                    document.getElementById('loading-text').innerText = `Compressing Page ${i} of ${pdf.numPages}...`;
+                    document.getElementById('loading-text').innerText = t('msg_proc_page').replace('{1}', i).replace('{2}', pdf.numPages);
                     updateProgress((i/pdf.numPages)*100); 
                     await new Promise(r => requestAnimationFrame(r));
                     
@@ -1718,7 +1740,7 @@
 
         async function processPageNumber(){ 
             if(!state.files.pagenumber)return toast(t('msg_err_pdf'),'error'); 
-            showLoading("Downloading Thai Fonts..."); 
+            showLoading(t('loading_font')); 
             try{ 
                 const doc=await PDFDocument.load(await state.files.pagenumber.arrayBuffer());
                 
@@ -1750,8 +1772,8 @@
             }catch(e){toast(e.message,'error')} hideLoading(); 
         }
 
-        async function processProtect(){ if(!state.files.protect)return toast(t('msg_err_pdf'),'error'); const u=document.getElementById('pass-protect-u').value, o=document.getElementById('pass-protect-o').value; if(!u)return toast("User Password is required",'error'); showLoading(); try{ const doc=await PDFDocument.load(await state.files.protect.arrayBuffer()); doc.encrypt({userPassword:u, ownerPassword:o||u, permissions:{modifying:false}}); downloadBlob(new Blob([await doc.save()],{type:'application/pdf'}), `${getOutputName('protect','protected')}.pdf`); toast(t('msg_done')); }catch(e){toast(e.message,'error')} hideLoading(); }
-        async function processUnlock(){ if(!state.files.unlock)return toast(t('msg_err_pdf'),'error'); const p=document.getElementById('pass-unlock').value; if(!p)return toast("Enter password",'error'); showLoading(); try{ const doc=await PDFDocument.load(await state.files.unlock.arrayBuffer(),{password:p}); downloadBlob(new Blob([await doc.save()],{type:'application/pdf'}), `${getOutputName('unlock','unlocked')}.pdf`); toast(t('msg_done')); }catch(e){toast("Incorrect password",'error')} hideLoading(); }
+        async function processProtect(){ if(!state.files.protect)return toast(t('msg_err_pdf'),'error'); const u=document.getElementById('pass-protect-u').value, o=document.getElementById('pass-protect-o').value; if(!u)return toast(t('msg_err_pass_req'),'error'); showLoading(); try{ const doc=await PDFDocument.load(await state.files.protect.arrayBuffer()); doc.encrypt({userPassword:u, ownerPassword:o||u, permissions:{modifying:false}}); downloadBlob(new Blob([await doc.save()],{type:'application/pdf'}), `${getOutputName('protect','protected')}.pdf`); toast(t('msg_done')); }catch(e){toast(e.message,'error')} hideLoading(); }
+        async function processUnlock(){ if(!state.files.unlock)return toast(t('msg_err_pdf'),'error'); const p=document.getElementById('pass-unlock').value; if(!p)return toast(t('msg_err_pass_req'),'error'); showLoading(); try{ const doc=await PDFDocument.load(await state.files.unlock.arrayBuffer(),{password:p}); downloadBlob(new Blob([await doc.save()],{type:'application/pdf'}), `${getOutputName('unlock','unlocked')}.pdf`); toast(t('msg_done')); }catch(e){toast(t('msg_err_pass'),'error')} hideLoading(); }
         
         function syncInputToPreview(mode) {
             const id = mode === 'delete' ? 'val-delete' : mode === 'pdf2img' ? 'range-pdf2img' : mode === 'split' ? 'val-split' : mode === 'rotate' ? 'pages-rotate' : null;
